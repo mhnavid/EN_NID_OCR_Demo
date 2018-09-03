@@ -48,22 +48,22 @@ public class CameraShow extends AppCompatActivity {
         cameraView.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(byte[] jpeg) {
+                Log.d("arr", String.valueOf(jpeg.length));
                 bmp = ByteArrayToBitmap(jpeg);
-//                image = FirebaseVisionImage.fromBitmap(bmp);
-                metadata = new FirebaseVisionImageMetadata.Builder()
-                        .setWidth(bmp.getWidth())
-                        .setHeight(bmp.getWidth())
-                        .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-                        .setRotation(FirebaseVisionImageMetadata.ROTATION_90)
-                        .build();
-                image = FirebaseVisionImage.fromByteBuffer(ByteBuffer.wrap(jpeg), metadata);
-                textRecognizer = FirebaseVision.getInstance()
-                        .getOnDeviceTextRecognizer();
-                textRecognizer.processImage(image)
-                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                image = FirebaseVisionImage.fromBitmap(bmp);
+//                metadata = new FirebaseVisionImageMetadata.Builder()
+//                        .setWidth(jpeg.length)
+//                        .setHeight(bmp.getHeight())
+//                        .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+//                        .setRotation(FirebaseVisionImageMetadata.ROTATION_90)
+//                        .build();
+//                image = FirebaseVisionImage.fromByteBuffer(ByteBuffer.wrap(jpeg), metadata);
+                textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
+                textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                             @Override
                             public void onSuccess(FirebaseVisionText result) {
                                 String resultText = result.getText();
+                                Log.d("arr", String.valueOf(bmp.getWidth()+","+bmp.getHeight()));
                                 Intent in = new Intent(CameraShow.this, ResultShow.class);
                                 in.putExtra("result", resultText);
                                 startActivity(in);
@@ -78,7 +78,7 @@ public class CameraShow extends AppCompatActivity {
                                 });
 
 
-                Log.d("arr", String.valueOf(""));
+
 //                Intent in = new Intent(cameraShow.this, CanvasDraw.class);
 //                in.putExtra("path", path.toString());
 //                startActivity(in);
