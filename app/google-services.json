@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "364224655298",
+    "firebase_url": "https://ennidocrdemo.firebaseio.com",
+    "project_id": "ennidocrdemo",
+    "storage_bucket": "ennidocrdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364224655298:android:46455c67f10ebca1",
+        "android_client_info": {
+          "package_name": "nvd.hasan.ennidocrdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364224655298-i0bma4inj8v1gb10797hv01a3tq0ld4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMpwypM-ZGqNPMvcz8BT4pKOUv1_4JRpg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
