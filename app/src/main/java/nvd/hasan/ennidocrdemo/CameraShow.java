@@ -3,8 +3,10 @@ package nvd.hasan.ennidocrdemo;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,13 +53,6 @@ public class CameraShow extends AppCompatActivity {
                 Log.d("arr", String.valueOf(jpeg.length));
                 bmp = ByteArrayToBitmap(jpeg);
                 image = FirebaseVisionImage.fromBitmap(bmp);
-//                metadata = new FirebaseVisionImageMetadata.Builder()
-//                        .setWidth(jpeg.length)
-//                        .setHeight(bmp.getHeight())
-//                        .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-//                        .setRotation(FirebaseVisionImageMetadata.ROTATION_90)
-//                        .build();
-//                image = FirebaseVisionImage.fromByteBuffer(ByteBuffer.wrap(jpeg), metadata);
                 textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
                 textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                             @Override
@@ -76,12 +71,6 @@ public class CameraShow extends AppCompatActivity {
 
                                     }
                                 });
-
-
-
-//                Intent in = new Intent(cameraShow.this, CanvasDraw.class);
-//                in.putExtra("path", path.toString());
-//                startActivity(in);
             }
         });
 

@@ -34,4 +34,8 @@ public class ResultShow extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }
