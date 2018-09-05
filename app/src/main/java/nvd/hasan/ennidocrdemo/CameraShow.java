@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.util.regex.Pattern;
 
 public class CameraShow extends AppCompatActivity {
 
@@ -48,20 +49,47 @@ public class CameraShow extends AppCompatActivity {
         cameraView = findViewById(R.id.camera);
 
         cameraView.addCameraListener(new CameraListener() {
+            int count = 0;
+            String elementText, lineText, resultText;
             @Override
             public void onPictureTaken(byte[] jpeg) {
                 Log.d("arr", String.valueOf(jpeg.length));
+                Intent in = new Intent(CameraShow.this, ResultShow.class);
                 bmp = ByteArrayToBitmap(jpeg);
                 image = FirebaseVisionImage.fromBitmap(bmp);
                 textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
                 textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                    Intent in = new Intent(CameraShow.this, ResultShow.class);
                             @Override
                             public void onSuccess(FirebaseVisionText result) {
-                                String resultText = result.getText();
-                                Log.d("arr", String.valueOf(bmp.getWidth()+","+bmp.getHeight()));
-                                Intent in = new Intent(CameraShow.this, ResultShow.class);
-                                in.putExtra("result", resultText);
-                                startActivity(in);
+                                resultText = result.getText();
+                                count++;
+//                                for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+//                                    if (block.getText() != null){
+//                                        blockText[count] = block.getText();
+//                                        count++;
+//                                    }
+//                                    Log.d("blockText", blockText[5] + blockText[6]);
+//                                    for (FirebaseVisionText.Line line: block.getLines()) {
+//                                        lineText = line.getText();
+//                                        Log.d("lineText", lineText);
+//                                        for (FirebaseVisionText.Element element: line.getElements()) {
+//                                            elementText = element.getText();
+//                                            Log.d("elementText", elementText);
+//                                        }
+//                                    }
+//                                }
+                                try {
+                                    String[] parts = resultText.split(Pattern.quote("Name"));
+                                    String[] name = parts[1].split(Pattern.quote("\n"));
+
+                                    Log.d("arr", String.valueOf(bmp.getWidth()+","+bmp.getHeight()));
+                                    Log.d("resultText", String.valueOf(name[0]));
+                                    in.putExtra("result", name[0]+" "+name[1]);
+                                }
+                                catch (Exception e){
+                                    in.putExtra("error", "Please try again.");
+                                }
                             }
                         })
                         .addOnFailureListener(
@@ -71,6 +99,7 @@ public class CameraShow extends AppCompatActivity {
 
                                     }
                                 });
+                startActivity(in);
             }
         });
 

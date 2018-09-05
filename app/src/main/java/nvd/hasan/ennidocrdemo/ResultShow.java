@@ -22,9 +22,13 @@ public class ResultShow extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         resultText = findViewById(R.id.resultText);
 
-        String result = getIntent().getStringExtra("result");
-
-        resultText.setText(result);
+        String result = "Name: " + getIntent().getStringExtra("result");
+        String error = getIntent().getStringExtra("error");
+        if (error != null){
+            resultText.setText(error);
+        }else {
+            resultText.setText(result);
+        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
