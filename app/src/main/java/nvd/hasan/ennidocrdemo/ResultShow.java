@@ -12,7 +12,7 @@ import org.w3c.dom.Text;
 public class ResultShow extends AppCompatActivity {
 
     Button backBtn;
-    TextView resultText;
+    TextView nameText, dobText, nidText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +20,20 @@ public class ResultShow extends AppCompatActivity {
         setContentView(R.layout.activity_result_show);
 
         backBtn = findViewById(R.id.backBtn);
-        resultText = findViewById(R.id.resultText);
+        nameText = findViewById(R.id.nameText);
+        dobText = findViewById(R.id.dobText);
+        nidText = findViewById(R.id.nidText);
 
-        String result = "Name: " + getIntent().getStringExtra("result");
+        String name = getIntent().getStringExtra("name");
+        String dob = getIntent().getStringExtra("dob");
+        String nid = getIntent().getStringExtra("nid");
         String error = getIntent().getStringExtra("error");
         if (error != null){
-            resultText.setText(error);
+            nameText.setText(error);
         }else {
-            resultText.setText(result);
+            nameText.setText(name);
+            dobText.setText(dob);
+            nidText.setText(nid);
         }
 
         backBtn.setOnClickListener(new View.OnClickListener() {

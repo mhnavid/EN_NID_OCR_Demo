@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CameraShow extends AppCompatActivity {
@@ -49,11 +50,9 @@ public class CameraShow extends AppCompatActivity {
         cameraView = findViewById(R.id.camera);
 
         cameraView.addCameraListener(new CameraListener() {
-            int count = 0;
-            String elementText, lineText, resultText;
+            String resultText;
             @Override
             public void onPictureTaken(byte[] jpeg) {
-                Log.d("arr", String.valueOf(jpeg.length));
                 Intent in = new Intent(CameraShow.this, ResultShow.class);
                 bmp = ByteArrayToBitmap(jpeg);
                 image = FirebaseVisionImage.fromBitmap(bmp);
@@ -63,32 +62,35 @@ public class CameraShow extends AppCompatActivity {
                             @Override
                             public void onSuccess(FirebaseVisionText result) {
                                 resultText = result.getText();
-                                count++;
-//                                for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
-//                                    if (block.getText() != null){
-//                                        blockText[count] = block.getText();
-//                                        count++;
-//                                    }
-//                                    Log.d("blockText", blockText[5] + blockText[6]);
-//                                    for (FirebaseVisionText.Line line: block.getLines()) {
-//                                        lineText = line.getText();
-//                                        Log.d("lineText", lineText);
-//                                        for (FirebaseVisionText.Element element: line.getElements()) {
-//                                            elementText = element.getText();
-//                                            Log.d("elementText", elementText);
-//                                        }
-//                                    }
-//                                }
                                 try {
-                                    String[] parts = resultText.split(Pattern.quote("Name"));
-                                    String[] name = parts[1].split(Pattern.quote("\n"));
+                                    String[] partOne = resultText.split(Pattern.quote("Name"));
+                                    String[] name = partOne[1].split(Pattern.quote("\n"));
 
-                                    Log.d("arr", String.valueOf(bmp.getWidth()+","+bmp.getHeight()));
-                                    Log.d("resultText", String.valueOf(name[0]));
-                                    in.putExtra("result", name[0]+" "+name[1]);
+                                    String[] partTwo = resultText.split(Pattern.quote("Birth"));
+                                    String[] dob = partTwo[1].split(Pattern.quote("\n"));
+                                    String nid;
+
+//                                    String[] nid = resultText.split("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
+                                    Pattern pattern = Pattern.compile("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
+                                    Matcher matcher = pattern.matcher(resultText);
+                                    if (matcher.find())
+                                    {
+                                        System.out.println(matcher.group(1));
+                                        nid = matcher.group(1);
+                                        Log.d("nid", nid);
+                                        in.putExtra("nid", nid);
+                                    }
+
+                                    Log.d("resultText", resultText);
+                                    Log.d("dob", dob[0]);
+                                    in.putExtra("name", name[0]+" "+name[1]);
+                                    in.putExtra("dob", dob[0]);
+
+                                    startActivity(in);
                                 }
                                 catch (Exception e){
                                     in.putExtra("error", "Please try again.");
+                                    startActivity(in);
                                 }
                             }
                         })
@@ -99,7 +101,6 @@ public class CameraShow extends AppCompatActivity {
 
                                     }
                                 });
-                startActivity(in);
             }
         });
 
