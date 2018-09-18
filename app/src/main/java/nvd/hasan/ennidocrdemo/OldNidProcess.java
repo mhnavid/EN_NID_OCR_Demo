@@ -31,7 +31,6 @@ public class OldNidProcess extends AppCompatActivity {
 
     private Bitmap bmp;
     private FirebaseVisionImage image;
-    private FirebaseVisionImageMetadata metadata;
     private FirebaseVisionTextRecognizer textRecognizer;
 
     @Override
@@ -46,7 +45,6 @@ public class OldNidProcess extends AppCompatActivity {
             String resultText;
             @Override
             public void onPictureTaken(byte[] jpeg) {
-                Intent in = new Intent(OldNidProcess.this, ResultShow.class);
                 bmp = ByteArrayToBitmap(jpeg);
                 image = FirebaseVisionImage.fromBitmap(bmp);
                 textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
@@ -55,40 +53,32 @@ public class OldNidProcess extends AppCompatActivity {
                             @Override
                             public void onSuccess(FirebaseVisionText result) {
                                 resultText = result.getText();
-//                                Log.d("resultNID", resultText);
+                                Log.d("resultNID", resultText);
                                 try {
-                                    String[] partOne = resultText.split(Pattern.quote("Name"));
+                                    String nid, dob;
+
+                                    String[] partOne = resultText.split(Pattern.quote("Name:"));
                                     String[] name = partOne[1].split(Pattern.quote("\n"));
+                                    in.putExtra("name", String.valueOf(name[0]));
 
-                                    String[] partTwo = resultText.split(Pattern.quote("Birth"));
-                                    String[] dob = partTwo[1].split(Pattern.quote("\n"));
-                                    String nid;
+//                                    String[] partTwo = resultText.split(Pattern.quote("Birth"));
+//                                    String[] dob = partTwo[1].split(Pattern.quote("\n"));
+                                    Pattern dobPatten = Pattern.compile("([0-9]{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s[0-9]{4})");
+                                    Matcher dobMatcher = dobPatten.matcher(resultText);
 
-                                    in.putExtra("name", String.valueOf(name[0]+" "+name[1]));
-                                    Log.d("nameNID", String.valueOf(name[0]+" "+name[1]));
-                                    in.putExtra("dob", dob[0]);
-                                    Log.d("dobNID", dob[0]);
-
-                                    Pattern patternNew = Pattern.compile("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
-                                    Pattern patternOld = Pattern.compile("([0-9]{13})");
-                                    Matcher matcherNew = patternNew.matcher(resultText);
-                                    Matcher matcherOld = patternOld.matcher(resultText);
-                                    if (matcherNew.find())
-                                    {
-//                                        System.out.println(matcher.group(1));
-
-                                        nid = matcherNew.group(1);
-                                        Log.d("NID", nid);
-//                                        Log.d("nid", nid);
-                                        in.putExtra("nid", nid);
+                                    if (dobMatcher.find()){
+                                        dob = dobMatcher.group(1);
+                                        in.putExtra("dob", dob);
                                     }
-                                    else if (matcherOld.find()){
+
+                                    Pattern patternOld = Pattern.compile("([0-9]{13})");
+                                    Matcher matcherOld = patternOld.matcher(resultText);
+
+                                    if (matcherOld.find()){
                                         nid = matcherOld.group(1);
                                         in.putExtra("nid", nid);
                                     }
 
-//                                    Log.d("resultText", resultText);
-//                                    Log.d("dob", dob[0]);
 
                                     startActivity(in);
                                 }
@@ -134,29 +124,16 @@ public class OldNidProcess extends AppCompatActivity {
         cameraView.destroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(OldNidProcess.this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public Bitmap ByteArrayToBitmap(byte[] byteArray)
     {
         ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(byteArray);
         Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
         return bitmap;
     }
-
-//    public File savebitmap(Bitmap bmp) {
-//        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-//        File directory = cw.getDir("ImageCrop", Context.MODE_PRIVATE);
-//        if (!directory.exists()) {
-//            directory.mkdir();
-//        }
-//        File mypath = new File(directory, "thumbnail.jpg");
-//
-//        FileOutputStream fos = null;
-//        try {
-//            fos = new FileOutputStream(mypath);
-//            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//            fos.close();
-//        } catch (Exception e) {
-//            Log.e("SAVE_IMAGE", e.getMessage(), e);
-//        }
-//        return  mypath;
-//    }
 }

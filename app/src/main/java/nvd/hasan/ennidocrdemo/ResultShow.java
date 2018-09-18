@@ -37,7 +37,7 @@ public class ResultShow extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(ResultShow.this, OldNidProcess.class);
+                Intent in = new Intent(ResultShow.this, MainActivity.class);
                 startActivity(in);
             }
         });

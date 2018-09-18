@@ -8,19 +8,28 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button openCameraBtn;
+    Button oldNidBtn, newNidBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        openCameraBtn = findViewById(R.id.openCameraBtn);
+        oldNidBtn = findViewById(R.id.oldNIDBtn);
+        newNidBtn = findViewById(R.id.newNIDBtn);
 
-        openCameraBtn.setOnClickListener(new View.OnClickListener() {
+        oldNidBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(MainActivity.this, OldNidProcess.class);
+                startActivity(in);
+            }
+        });
+
+        newNidBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(MainActivity.this, NewNidProcess.class);
                 startActivity(in);
             }
         });
