@@ -1,12 +1,8 @@
 package nvd.hasan.ennidocrdemo;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,13 +21,10 @@ import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraView;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CameraShow extends AppCompatActivity {
+public class OldNidProcess extends AppCompatActivity {
 
     private Button captureBtn;
     private CameraView cameraView;
@@ -53,15 +46,16 @@ public class CameraShow extends AppCompatActivity {
             String resultText;
             @Override
             public void onPictureTaken(byte[] jpeg) {
-                Intent in = new Intent(CameraShow.this, ResultShow.class);
+                Intent in = new Intent(OldNidProcess.this, ResultShow.class);
                 bmp = ByteArrayToBitmap(jpeg);
                 image = FirebaseVisionImage.fromBitmap(bmp);
                 textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
                 textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
-                    Intent in = new Intent(CameraShow.this, ResultShow.class);
+                    Intent in = new Intent(OldNidProcess.this, ResultShow.class);
                             @Override
                             public void onSuccess(FirebaseVisionText result) {
                                 resultText = result.getText();
+//                                Log.d("resultNID", resultText);
                                 try {
                                     String[] partOne = resultText.split(Pattern.quote("Name"));
                                     String[] name = partOne[1].split(Pattern.quote("\n"));
@@ -70,21 +64,31 @@ public class CameraShow extends AppCompatActivity {
                                     String[] dob = partTwo[1].split(Pattern.quote("\n"));
                                     String nid;
 
-//                                    String[] nid = resultText.split("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
-                                    Pattern pattern = Pattern.compile("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
-                                    Matcher matcher = pattern.matcher(resultText);
-                                    if (matcher.find())
+                                    in.putExtra("name", String.valueOf(name[0]+" "+name[1]));
+                                    Log.d("nameNID", String.valueOf(name[0]+" "+name[1]));
+                                    in.putExtra("dob", dob[0]);
+                                    Log.d("dobNID", dob[0]);
+
+                                    Pattern patternNew = Pattern.compile("(([0-9][0-9][0-9])\\s([0-9][0-9][0-9])\\s([0-9][0-9][0-9][0-9]))");
+                                    Pattern patternOld = Pattern.compile("([0-9]{13})");
+                                    Matcher matcherNew = patternNew.matcher(resultText);
+                                    Matcher matcherOld = patternOld.matcher(resultText);
+                                    if (matcherNew.find())
                                     {
-                                        System.out.println(matcher.group(1));
-                                        nid = matcher.group(1);
-                                        Log.d("nid", nid);
+//                                        System.out.println(matcher.group(1));
+
+                                        nid = matcherNew.group(1);
+                                        Log.d("NID", nid);
+//                                        Log.d("nid", nid);
+                                        in.putExtra("nid", nid);
+                                    }
+                                    else if (matcherOld.find()){
+                                        nid = matcherOld.group(1);
                                         in.putExtra("nid", nid);
                                     }
 
-                                    Log.d("resultText", resultText);
-                                    Log.d("dob", dob[0]);
-                                    in.putExtra("name", name[0]+" "+name[1]);
-                                    in.putExtra("dob", dob[0]);
+//                                    Log.d("resultText", resultText);
+//                                    Log.d("dob", dob[0]);
 
                                     startActivity(in);
                                 }

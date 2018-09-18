@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         openCameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(MainActivity.this, CameraShow.class);
+                Intent in = new Intent(MainActivity.this, OldNidProcess.class);
                 startActivity(in);
             }
         });

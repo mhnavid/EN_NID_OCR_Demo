@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class ResultShow extends AppCompatActivity {
 
     Button backBtn;
@@ -39,7 +37,7 @@ public class ResultShow extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(ResultShow.this, CameraShow.class);
+                Intent in = new Intent(ResultShow.this, OldNidProcess.class);
                 startActivity(in);
             }
         });

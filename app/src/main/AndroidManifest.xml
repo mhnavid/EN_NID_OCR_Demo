@@ -22,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CameraShow" />
-        <activity android:name=".ResultShow"></activity>
+        <activity android:name=".OldNidProcess" />
+        <activity android:name=".ResultShow" />
+        <activity android:name=".NewNidProcess"></activity>
     </application>
 
 </manifest>
